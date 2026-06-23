@@ -22,7 +22,8 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body>
+  <body class="min-h-screen bg-muted/30 text-foreground antialiased">
+    <%= render Components::TopNav.new %>
     <%= yield %>
   </body>
 </html>
