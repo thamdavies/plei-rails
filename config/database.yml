@@ -1,0 +1,61 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("DB_HOST", Rails.application.credentials.dig(:database, :host)) %>
+  username: <%= ENV.fetch("DB_USERNAME", Rails.application.credentials.dig(:database, :username)) %>
+  password: <%= ENV.fetch("DB_PASSWORD", Rails.application.credentials.dig(:database, :password)) %>
+  port: <%= ENV.fetch("DB_PORT", 5432) %>
+
+development:
+  primary:
+    <<: *default
+    database: plei_rails_development
+  cache:
+    <<: *default
+    database: plei_rails_development_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: plei_rails_development_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: plei_rails_development_cable
+    migrations_paths: db/cable_migrate
+
+test:
+  primary:
+    <<: *default
+    database: plei_rails_test
+  cache:
+    <<: *default
+    database: plei_rails_test_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: plei_rails_test_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: plei_rails_test_cable
+    migrations_paths: db/cable_migrate
+
+production:
+  primary:
+    <<: *default
+    database: plei_rails_production
+  cache:
+    <<: *default
+    database: plei_rails_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *default
+    database: plei_rails_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *default
+    database: plei_rails_production_cable
+    migrations_paths: db/cable_migrate

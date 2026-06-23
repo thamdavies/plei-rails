@@ -1,0 +1,353 @@
+{
+  "title": "SHQ Connector",
+  "uid": "shq-main",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "panels": [
+    {
+      "id": 100,
+      "title": "🔴 Critical",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 }
+    },
+    {
+      "id": 1,
+      "title": "Job Failure / sec",
+      "description": "OrdersPaidJob / ShqOrdersPaidJob failures — app không chuyển orders sang SHQ",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 1 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "ops", "min": 0, "color": { "fixedColor": "red", "mode": "fixed" } }
+      },
+      "targets": [
+        {
+          "expr": "sum by (activejob) (clamp_min(rate(activejob_executed_total[5m]) - rate(activejob_success_total[5m]), 0))",
+          "legendFormat": "{{activejob}}",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "5xx Error Rate",
+      "description": "HTTP 5xx — app crash hoặc unhandled exception",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 1 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "min": 0, "color": { "fixedColor": "dark-red", "mode": "fixed" } }
+      },
+      "targets": [
+        {
+          "expr": "(sum by (status) (rate(rails_requests_total{status=~\"5[0-9][0-9]\"}[5m]))) OR on() vector(0)",
+          "legendFormat": "HTTP 5xx",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Puma Backlog",
+      "description": "Request queue up → Shopify merchant bị timeout",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 1 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 1 }] }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(puma_backlog)",
+          "legendFormat": "backlog",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "DB Connection Waiting",
+      "description": "Connection pool cạn → requests bị block chờ DB connection",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 1 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 1 }] }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (config) (activerecord_connection_pool_waiting)",
+          "legendFormat": "waiting [{{config}}]",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "title": "🟡 Performance",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 9 }
+    },
+    {
+      "id": 5,
+      "title": "Request Duration p95",
+      "description": "Shopify embedded app cần load nhanh — p95 nên dưới 500ms",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 10 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "s", "min": 0 }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (controller, le) (rate(rails_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p95 {{controller}}",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Top Slow Queries (avg latency, 5m)",
+      "description": "Queries nào chạy lâu nhất — ưu tiên index",
+      "type": "table",
+      "gridPos": { "h": 8, "w": 10, "x": 8, "y": 10 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "s", "min": 0 }
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [{ "displayName": "Value", "desc": true }]
+      },
+      "targets": [
+        {
+          "expr": "topk(10, sum by (kind) (rate(activerecord_query_duration_seconds_sum{config=\"primary\",cached=\"false\"}[5m])) / sum by (kind) (rate(activerecord_query_duration_seconds_count{config=\"primary\",cached=\"false\"}[5m])))",
+          "legendFormat": "{{kind}}",
+          "refId": "A",
+          "instant": true,
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Puma Thread Utilization",
+      "description": "Trên 80% → cần tăng Puma threads hoặc scale",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 10 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": 0 }, { "color": "yellow", "value": 60 }, { "color": "red", "value": 80 }]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "100 * sum(puma_busy_threads) / sum(puma_max_threads)",
+          "legendFormat": "thread utilization %",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Job Runtime p95 (by job class)",
+      "description": "Job chạy lâu làm tắc SolidQueue workers",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 18 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "s", "min": 0 }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (activejob, le) (rate(activejob_runtime_seconds_bucket[5m])))",
+          "legendFormat": "p95 {{activejob}}",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "title": "🔵 Capacity",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 26 }
+    },
+    {
+      "id": 9,
+      "title": "Host CPU Utilization",
+      "description": "node_exporter — CPU toàn bộ host (Rails + Postgres + ...)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 27 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": 0 }, { "color": "yellow", "value": 70 }, { "color": "red", "value": 90 }]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "100 * (1 - avg by (instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])))",
+          "legendFormat": "CPU {{instance}}",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Host Memory Utilization",
+      "description": "node_exporter — RAM toàn bộ host",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 27 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": 0 }, { "color": "yellow", "value": 75 }, { "color": "red", "value": 90 }]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))",
+          "legendFormat": "RAM {{instance}}",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "SolidQueue Poll Activity",
+      "description": "Proxy cho queue depth — poll tần suất cao = nhiều jobs đang chờ",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 27 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "ops", "min": 0 }
+      },
+      "targets": [
+        {
+          "expr": "sum by (kind) (rate(activerecord_queries_total{config=\"queue\",kind=~\"SolidQueue.*\",cached=\"false\"}[2m]))",
+          "legendFormat": "{{kind}}",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "title": "🟢 Business — SHQ Order Pipeline",
+      "type": "row",
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 35 }
+    },
+    {
+      "id": 12,
+      "title": "OrdersPaidJob — Executed vs Success / sec",
+      "description": "Core flow: merchant order → SHQ. Gap giữa executed và success = failures",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 36 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "ops", "min": 0 }
+      },
+      "targets": [
+        {
+          "expr": "rate(activejob_executed_total{activejob=\"OrdersPaidJob\"}[5m])",
+          "legendFormat": "executed",
+          "refId": "A",
+          "datasource": "Prometheus"
+        },
+        {
+          "expr": "rate(activejob_success_total{activejob=\"OrdersPaidJob\"}[5m])",
+          "legendFormat": "success",
+          "refId": "B",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "title": "ShqOrdersPaidJob — Executed vs Success / sec",
+      "description": "SHQ xác nhận invoice và ghi print files — failure = merchant không nhận được bản in",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 36 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "ops", "min": 0 }
+      },
+      "targets": [
+        {
+          "expr": "rate(activejob_executed_total{activejob=\"ShqOrdersPaidJob\"}[5m])",
+          "legendFormat": "executed",
+          "refId": "A",
+          "datasource": "Prometheus"
+        },
+        {
+          "expr": "rate(activejob_success_total{activejob=\"ShqOrdersPaidJob\"}[5m])",
+          "legendFormat": "success",
+          "refId": "B",
+          "datasource": "Prometheus"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Webhook orders/paid Throughput",
+      "description": "Số orders merchant gửi về qua Shopify webhook",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 36 },
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "min": 0 }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(rails_requests_total{controller=~\".*orders_paid.*\"}[5m]))",
+          "legendFormat": "webhook orders/paid",
+          "refId": "A",
+          "datasource": "Prometheus"
+        }
+      ]
+    }
+  ]
+}
