@@ -5,7 +5,7 @@ class Components::TopNav < Components::Base
 
   def view_template
     header(class: "sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur") do
-      div(class: "mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8") do
+      div(class: "mx-auto flex h-16 w-full items-center justify-between gap-4 px-8") do
         div(class: "flex items-center gap-8") do
           a(href: root_path, class: "inline-flex items-center gap-2") do
             image_tag "logo.svg", alt: "Plei Rails Logo", class: "h-8 w-auto dark:hidden"
@@ -13,7 +13,7 @@ class Components::TopNav < Components::Base
           end
 
           nav(class: "hidden items-center gap-2 md:flex") do
-            render Link.new(href: root_path, variant: :ghost, class: "font-semibold text-primary") { "Examples" }
+            render Link.new(href: examples_path, variant: :ghost, class: "font-semibold text-primary") { "Examples" }
             render Link.new(href: "https://github.com/thamdavies/plei-rails", variant: :ghost, target: "_blank") { "Github" }
           end
         end

@@ -1,50 +1,85 @@
 class PagesController < ApplicationController
+  EXAMPLES = [
+    {
+      title: "CRUD with Modal",
+      description: "Create, read, update, and delete records using a modal dialog pattern with Turbo Frames and Stimulus.",
+      category: "CRUD",
+      tags: %w[modal form turbo],
+      cover_tone: "from-indigo-950 via-indigo-900 to-violet-800"
+    },
+    {
+      title: "Search with Autocomplete",
+      description: "Real-time search with autocomplete suggestions using Stimulus controllers and debounced fetch requests.",
+      category: "UI",
+      tags: %w[search autocomplete stimulus]
+    },
+    {
+      title: "User Authentication",
+      description: "Complete authentication flow with login, registration, password reset, and session management.",
+      category: "Auth",
+      tags: %w[authentication session password],
+      cover_tone: "from-rose-950 via-rose-900 to-pink-800"
+    },
+    {
+      title: "Image Upload with Preview",
+      description: "Drag-and-drop image upload with live preview, progress bar, and Active Storage integration.",
+      category: "CRUD",
+      tags: %w[upload image storage],
+      cover_tone: "from-emerald-950 via-emerald-900 to-teal-800"
+    },
+    {
+      title: "Pagination & Infinite Scroll",
+      description: "Paginate large result sets with classic page numbers and seamless infinite scroll using Hotwire.",
+      category: "UI",
+      tags: %w[pagination infinite-scroll stimulus],
+      cover_tone: "from-amber-950 via-amber-900 to-yellow-800"
+    },
+    {
+      title: "API Token Authentication",
+      description: "Secure your API with token-based authentication, rate limiting, and request validation.",
+      category: "API",
+      tags: %w[api rest authentication],
+      cover_tone: "from-cyan-950 via-cyan-900 to-sky-800"
+    },
+    {
+      title: "Inline Editing",
+      description: "Click-to-edit any field on the page with automatic save using Turbo Frames and optimistic UI updates.",
+      category: "CRUD",
+      tags: %w[form stimulus turbo],
+      cover_tone: "from-orange-950 via-orange-900 to-amber-800"
+    },
+    {
+      title: "Notification Toast System",
+      description: "Display real-time toast notifications with auto-dismiss, stacking, and action callbacks.",
+      category: "UI",
+      tags: %w[notification toast stimulus],
+      cover_tone: "from-blue-950 via-blue-900 to-indigo-800"
+    }
+  ].freeze
+
   def home
-    @path_title = "Learn Ruby on Rails Path"
-    @path_subtitle = "Become a Ruby on Rails developer in record time."
+    render Views::Pages::Home.new(
+      featured_examples: self.class::EXAMPLES.first(3),
+      categories: self.class::EXAMPLES.map { |e| e[:category] }.uniq.sort
+    )
+  end
 
-    @level = {
-      name: "Level One",
-      heading: "Prerequisites",
-      description: "Let's get our foundational knowledge of Ruby, SQL, and HTML together in this prerequisite level.",
-      series: 3,
-      hours: 10
-    }
+  def examples
+    @examples = self.class::EXAMPLES
+    @categories = @examples.map { |e| e[:category] }.uniq.sort
+    @tags = @examples.flat_map { |e| e[:tags] }.uniq.sort
+    @selected_category = params[:category]
+    @selected_tag = params[:tag]
 
-    @teacher = {
-      name: "Collin Jilbert",
-      role: "Lead Instructor",
-      initials: "CJ"
-    }
+    @examples = @examples.select { |e| e[:category] == @selected_category } if @selected_category.present?
+    @examples = @examples.select { |e| e[:tags].include?(@selected_tag) } if @selected_tag.present?
 
-    @courses = [
-      {
-        title: "Ruby for Beginners",
-        description: "Ruby is a dynamic, open source programming language with a focus on simplicity and productivity. It is the foundation for the Ruby on Rails web framework and we'll teach you the basics so you can get started with Rails.",
-        lessons: "10 Lessons",
-        duration: "5h 50m",
-        level: "Beginner",
-        cta: "Start Series",
-        cover_tone: "from-slate-950 via-slate-900 to-slate-700"
-      },
-      {
-        title: "SQL for Beginners",
-        description: "Structured Query Language is a domain-specific language for managing relational data. Learn practical SQL you will use in every Rails project.",
-        lessons: "8 Lessons",
-        duration: "4h 45m",
-        level: "Beginner",
-        cta: "Start Series",
-        cover_tone: "from-orange-950 via-red-900 to-amber-800"
-      },
-      {
-        title: "HTML and CSS Foundations",
-        description: "Build confidence with semantic HTML and modern CSS so your Rails features ship with clean, responsive, and maintainable interfaces.",
-        lessons: "6 Lessons",
-        duration: "4h 00m",
-        level: "Beginner",
-        cta: "Start Series",
-        cover_tone: "from-blue-950 via-indigo-900 to-cyan-800"
-      }
-    ]
+    render Views::Pages::Examples.new(
+      examples: @examples,
+      categories: @categories,
+      tags: @tags,
+      selected_category: @selected_category,
+      selected_tag: @selected_tag
+    )
   end
 end
