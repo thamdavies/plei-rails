@@ -6,34 +6,67 @@ class Views::Pages::Home < Views::Base
 
   def view_template
     hero_section
-    featured_section
+    # featured_section
     categories_section
-    cta_section
+    # cta_section
   end
 
   private
 
   def hero_section
     section(class: "relative overflow-hidden border-b") do
-      div(class: "absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent")
-      div(class: "container relative py-20 md:py-28") do
-        div(class: "mx-auto max-w-2xl text-center") do
-          div(class: "mb-6 inline-flex items-center rounded-full border bg-background px-3 py-1 text-xs font-medium text-muted-foreground") do
+      # Base gradient
+      div(class: "absolute inset-0 bg-gradient-to-b from-brand/3 via-transparent to-background")
+
+      # Decorative gradient orbs
+      div(class: "absolute inset-0 overflow-hidden pointer-events-none") do
+        div(
+          class: "absolute -top-40 -right-40 h-[500px] w-[500px] md:h-[600px] md:w-[600px] rounded-full opacity-[0.08]",
+          style: "background: radial-gradient(circle at center, #d32030 0%, transparent 70%)"
+        )
+        div(
+          class: "absolute -bottom-40 -left-40 h-[400px] w-[400px] md:h-[500px] md:w-[500px] rounded-full opacity-[0.06]",
+          style: "background: radial-gradient(circle at center, #d32030 0%, transparent 70%)"
+        )
+      end
+
+      # Subtle dot pattern
+      div(
+        class: "absolute inset-0 opacity-[0.03] pointer-events-none",
+        style: "background-image: radial-gradient(circle, #d32030 1px, transparent 1px); background-size: 32px 32px"
+      )
+
+      div(class: "container relative py-20 md:py-32") do
+        div(class: "mx-auto max-w-3xl text-center") do
+          # Badge with live indicator
+          div(class: "mb-6 inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/[0.04] px-4 py-1.5 text-xs font-medium text-brand") do
+            span(class: "relative flex h-2 w-2") do
+              span(class: "absolute inline-flex h-full w-full animate-ping rounded-full bg-brand/40")
+              span(class: "relative inline-flex h-2 w-2 rounded-full bg-brand")
+            end
             plain "Hands-on Rails examples for developers"
           end
+
           h1(class: "text-4xl font-bold tracking-tight md:text-5xl lg:text-6xl") do
-            span(class: "text-primary") { "Learn" }
+            span(class: "text-brand") { "Learn" }
             plain " Rails by "
-            span(class: "text-primary") { "Example" }
+            span(class: "text-brand") { "Example" }
           end
-          p(class: "mt-4 text-lg text-muted-foreground md:text-xl") do
+
+          p(class: "mt-6 max-w-2xl mx-auto text-lg text-muted-foreground md:text-xl") do
             plain "Real, runnable Rails examples that teach you one concept at a time. From CRUD to APIs — learn by building."
           end
-          div(class: "mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row") do
-            render Link.new(href: examples_path, variant: :primary, size: :lg, class: "w-full sm:w-auto") do
+
+          div(class: "mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row") do
+            Link(
+              href: examples_path,
+              variant: :primary,
+              size: :lg,
+              class: "w-full sm:w-auto bg-brand hover:bg-brand/90 shadow-lg shadow-brand/20"
+            ) do
               "Browse Examples"
             end
-            render Link.new(href: "https://github.com/thamdavies/plei-rails", variant: :outline, size: :lg, class: "w-full sm:w-auto") do
+            Link(href: "https://github.com/thamdavies/plei-rails", variant: :outline, size: :lg, class: "w-full sm:w-auto") do
               "GitHub"
             end
           end
@@ -51,11 +84,11 @@ class Views::Pages::Home < Views::Base
         end
         div(class: "grid gap-6 sm:grid-cols-2 lg:grid-cols-3") do
           @featured_examples.each do |example|
-            render Components::ExampleCard.new(example: example)
+            Components::ExampleCard(example: example)
           end
         end
         div(class: "mt-8 text-center") do
-          render Link.new(href: examples_path, variant: :link, size: :lg) do
+          Link(href: examples_path, variant: :link, size: :lg) do
             plain "View all examples"
             span(class: "ml-1") { "→" }
           end
@@ -112,7 +145,7 @@ class Views::Pages::Home < Views::Base
           h2(class: "text-2xl font-bold tracking-tight md:text-3xl") { "Ready to start building?" }
           p(class: "mt-2 text-muted-foreground") { "Pick an example, read the code, run it yourself. That's how you learn Rails." }
           div(class: "mt-6") do
-            render Link.new(href: examples_path, variant: :primary, size: :lg, class: "w-full sm:w-auto") do
+            Link(href: examples_path, variant: :primary, size: :lg, class: "w-full sm:w-auto") do
               plain "Explore all examples"
               span(class: "ml-1.5") { "→" }
             end
