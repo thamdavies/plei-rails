@@ -33,7 +33,7 @@ class Components::ExamplesSidebar < Components::Base
       h4(class: "mb-3 text-sm font-semibold") { "Tags" }
       div(class: "flex flex-wrap gap-1.5 lg:flex-col lg:flex-nowrap") do
         @tags.each do |tag|
-          render tag_link(tag)
+          tag_link(tag)
         end
       end
     end
