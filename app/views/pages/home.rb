@@ -1,7 +1,8 @@
 class Views::Pages::Home < Views::Base
-  def initialize(featured_examples:, categories:)
+  def initialize(featured_examples:, categories:, published_counts:)
     @featured_examples = featured_examples
     @categories = categories
+    @published_counts = published_counts
   end
 
   def view_template
@@ -129,7 +130,7 @@ class Views::Pages::Home < Views::Base
       end
       h3(class: "font-semibold") { category.name }
       p(class: "mt-1 text-sm text-muted-foreground") do
-        plain "#{category.posts.published.count} examples"
+        plain "#{@published_counts[category.id] || 0} examples"
       end
     end
   end
