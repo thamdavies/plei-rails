@@ -102,7 +102,7 @@ class Views::Pages::Home < Views::Base
         end
         div(class: "grid gap-4 sm:grid-cols-2 lg:grid-cols-4") do
           @categories.each do |category|
-            render category_card(category)
+            category_card(category)
           end
         end
       end
