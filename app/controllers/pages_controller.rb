@@ -7,7 +7,7 @@ class PagesController < ApplicationController
       .count
 
     render Views::Pages::Home.new(
-      featured_examples: Post.published.includes(:category, :tags).limit(3),
+      featured_examples: Post.published.includes(:author, :category, :tags).limit(3),
       categories: Category.all.order(:name),
       published_counts: published_counts
     )
