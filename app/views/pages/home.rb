@@ -6,19 +6,17 @@ class Views::Pages::Home < Views::Base
 
   def view_template
     hero_section
-    # featured_section
+    featured_section
     categories_section
-    # cta_section
+    cta_section
   end
 
   private
 
   def hero_section
     section(class: "relative overflow-hidden border-b") do
-      # Base gradient
       div(class: "absolute inset-0 bg-gradient-to-b from-brand/3 via-transparent to-background")
 
-      # Decorative gradient orbs
       div(class: "absolute inset-0 overflow-hidden pointer-events-none") do
         div(
           class: "absolute -top-40 -right-40 h-[500px] w-[500px] md:h-[600px] md:w-[600px] rounded-full opacity-[0.08]",
@@ -30,7 +28,6 @@ class Views::Pages::Home < Views::Base
         )
       end
 
-      # Subtle dot pattern
       div(
         class: "absolute inset-0 opacity-[0.03] pointer-events-none",
         style: "background-image: radial-gradient(circle, #d32030 1px, transparent 1px); background-size: 32px 32px"
@@ -38,7 +35,6 @@ class Views::Pages::Home < Views::Base
 
       div(class: "container relative py-20 md:py-32") do
         div(class: "mx-auto max-w-3xl text-center") do
-          # Badge with live indicator
           div(class: "mb-6 inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/[0.04] px-4 py-1.5 text-xs font-medium text-brand") do
             span(class: "relative flex h-2 w-2") do
               span(class: "absolute inline-flex h-full w-full animate-ping rounded-full bg-brand/40")
@@ -120,10 +116,10 @@ class Views::Pages::Home < Views::Base
       "Auth" => { gradient: "from-rose-500/10 via-rose-500/5 to-transparent", border: "border-rose-200 dark:border-rose-900", icon: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" },
       "API" => { gradient: "from-cyan-500/10 via-cyan-500/5 to-transparent", border: "border-cyan-200 dark:border-cyan-900", icon: "M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" }
     }
-    tone = tones[category] || tones["CRUD"]
+    tone = tones[category.name] || tones["CRUD"]
 
     a(
-      href: examples_path(category: category),
+      href: examples_path(category: category.slug),
       class: "group relative rounded-xl border #{tone[:border]} bg-background p-5 shadow-sm transition-all hover:shadow-md"
     ) do
       div(class: "mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br #{tone[:gradient]}") do
@@ -131,9 +127,9 @@ class Views::Pages::Home < Views::Base
           s.path(stroke_linecap: "round", stroke_linejoin: "round", d: tone[:icon])
         end
       end
-      h3(class: "font-semibold") { category }
+      h3(class: "font-semibold") { category.name }
       p(class: "mt-1 text-sm text-muted-foreground") do
-        plain "#{PagesController::EXAMPLES.count { |e| e[:category] == category }} examples"
+        plain "#{category.posts.published.count} examples"
       end
     end
   end

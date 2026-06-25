@@ -22,7 +22,7 @@ class Components::ExamplesSidebar < Components::Base
       ul(class: "space-y-1") do
         li { filter_link(nil, "All", @selected_category.nil? && @selected_tag.nil?) }
         @categories.each do |category|
-          li { filter_link(category, category, @selected_category == category) }
+          li { filter_link(category.slug, category.name, @selected_category == category.slug) }
         end
       end
     end
@@ -41,7 +41,7 @@ class Components::ExamplesSidebar < Components::Base
 
   def filter_link(category, label, active)
     a(
-      href: category.present? ? examples_path(category: category) : examples_path,
+      href: category.present? ? examples_path(category:) : examples_path,
       class: [
         "block rounded-md px-3 py-1.5 text-sm transition-colors",
         active ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
@@ -50,9 +50,9 @@ class Components::ExamplesSidebar < Components::Base
   end
 
   def tag_link(tag)
-    active = @selected_tag == tag
+    active = @selected_tag == tag.slug
     a(
-      href: examples_path(tag: tag),
+      href: examples_path(tag: tag.slug),
       class: [
         "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium transition-colors lg:block",
         active \
@@ -60,7 +60,7 @@ class Components::ExamplesSidebar < Components::Base
           : "bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground"
       ]
     ) do
-      plain "##{tag}"
+      plain "##{tag.name}"
     end
   end
 end
