@@ -2,14 +2,12 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-require "open-uri"
-
 # --- Vietnamese provinces (existing) ---
-VN_UNITS_SQL_URL = "https://raw.githubusercontent.com/thanglequoc/vietnamese-provinces-database/master/postgresql/postgres_ImportData_vn_units.sql"
+VN_UNITS_SQL_PATH = Rails.root.join("db/seeds/vn_units.sql")
 
 unless AdministrativeRegion.any?
   puts "Seeding Vietnamese provinces..."
-  sql = URI.open(VN_UNITS_SQL_URL).read
+  sql = File.read(VN_UNITS_SQL_PATH)
   ActiveRecord::Base.connection.execute(sql)
   puts "  #{AdministrativeRegion.count} regions, #{AdministrativeUnit.count} units, #{Province.count} provinces, #{Ward.count} wards"
 end
