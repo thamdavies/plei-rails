@@ -7,9 +7,9 @@ class PagesController < ApplicationController
   end
 
   def examples
-    @posts = Post.published.includes(:category, :tags)
-    @categories = Category.all.order(:name)
-    @tags = Tag.all.order(:name)
+@posts = Post.published.includes(:author, :category, :tags)
+@categories = Category.all.order(:name)
+@tags = Tag.all.order(:name)
     @selected_category = params[:category]
     @selected_tag = params[:tag]
 
