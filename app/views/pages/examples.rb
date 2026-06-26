@@ -1,6 +1,6 @@
 class Views::Pages::Examples < Views::Base
-  def initialize(examples:, categories:, tags:, selected_category:, selected_tag:)
-    @examples = examples
+  def initialize(posts:, categories:, tags:, selected_category:, selected_tag:)
+    @posts = posts
     @categories = categories
     @tags = tags
     @selected_category = selected_category
@@ -15,7 +15,7 @@ class Views::Pages::Examples < Views::Base
       end
 
       div(class: "flex flex-col gap-8 lg:flex-row") do
-        render Components::ExamplesSidebar.new(
+        Components::ExamplesSidebar(
           categories: @categories,
           tags: @tags,
           selected_category: @selected_category,
@@ -23,10 +23,10 @@ class Views::Pages::Examples < Views::Base
         )
 
         div(class: "flex-1 min-w-0") do
-          if @examples.any?
+          if @posts.any?
             div(class: "grid gap-6 sm:grid-cols-2 xl:grid-cols-3") do
-              @examples.each do |example|
-                render Components::ExampleCard.new(example: example)
+              @posts.each do |post|
+                Components::ExampleCard(example: post)
               end
             end
           else
