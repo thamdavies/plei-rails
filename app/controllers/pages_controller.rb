@@ -33,7 +33,7 @@ class PagesController < ApplicationController
   end
 
   def show
-    @post = Post.published.includes(:category, :tags).find_by!(slug: params[:id])
+@post = Post.published.includes(:author, :category, :tags).find_by!(slug: params[:id])
     render Views::Pages::Show.new(post: @post)
   end
 end
