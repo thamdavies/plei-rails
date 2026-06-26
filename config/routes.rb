@@ -1,12 +1,12 @@
 Rails.application.routes.draw do
   # Clearance authentication
-  resources :passwords, controller: "clearance/passwords", only: [:create, :new]
-  resource :session, controller: "clearance/sessions", only: [:create]
+  resources :passwords, controller: "clearance/passwords", only: [ :create, :new ]
+  resource :session, controller: "clearance/sessions", only: [ :create ]
 
-  resources :users, controller: "clearance/users", only: [:create] do
+  resources :users, controller: "clearance/users", only: [ :create ] do
     resource :password,
       controller: "clearance/passwords",
-      only: [:edit, :update]
+      only: [ :edit, :update ]
   end
 
   get "/sign_in" => "clearance/sessions#new", as: "sign_in"

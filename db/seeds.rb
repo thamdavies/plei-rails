@@ -33,7 +33,7 @@ permissions_data = [
   { action: "DELETE", resource: "POSTS", slug: "posts:delete" },
   { action: "PUBLISH", resource: "POSTS", slug: "posts:publish" },
   { action: "MANAGE", resource: "CATEGORIES", slug: "categories:manage" },
-  { action: "MANAGE", resource: "USERS", slug: "users:manage" },
+  { action: "MANAGE", resource: "USERS", slug: "users:manage" }
 ]
 
 permissions = permissions_data.map do |data|
@@ -51,17 +51,17 @@ manage_categories = permissions.find { |p| p.slug == "categories:manage" }
 manage_users = permissions.find { |p| p.slug == "users:manage" }
 
 # Admin gets all permissions
-[read_posts, write_posts, delete_posts, publish_posts, manage_categories, manage_users].each do |perm|
+[ read_posts, write_posts, delete_posts, publish_posts, manage_categories, manage_users ].each do |perm|
   RolePermission.find_or_create_by!(role: admin_role, permission: perm)
 end
 
 # Editor gets read, write, publish
-[read_posts, write_posts, publish_posts].each do |perm|
+[ read_posts, write_posts, publish_posts ].each do |perm|
   RolePermission.find_or_create_by!(role: editor_role, permission: perm)
 end
 
 # Author gets read, write
-[read_posts, write_posts].each do |perm|
+[ read_posts, write_posts ].each do |perm|
   RolePermission.find_or_create_by!(role: author_role, permission: perm)
 end
 
@@ -78,7 +78,7 @@ categories_data = [
   { name: "CRUD", slug: "crud", description: "Create, read, update, and delete patterns" },
   { name: "UI", slug: "ui", description: "User interface components and interactions" },
   { name: "Auth", slug: "auth", description: "Authentication and authorization" },
-  { name: "API", slug: "api", description: "API development and integration" },
+  { name: "API", slug: "api", description: "API development and integration" }
 ]
 
 categories = categories_data.map do |data|
@@ -113,7 +113,7 @@ posts_data = [
     description: "Create, read, update, and delete records using a modal dialog pattern with Turbo Frames and Stimulus.",
     summary: "Build a complete CRUD interface with modal dialogs using Hotwire.",
     category: crud_cat,
-    tags: %w[modal form turbo],
+    tags: %w[modal form turbo]
   },
   {
     title: "Search with Autocomplete",
@@ -121,7 +121,7 @@ posts_data = [
     description: "Real-time search with autocomplete suggestions using Stimulus controllers and debounced fetch requests.",
     summary: "Implement a search box with live autocomplete results.",
     category: ui_cat,
-    tags: %w[search autocomplete stimulus],
+    tags: %w[search autocomplete stimulus]
   },
   {
     title: "User Authentication",
@@ -129,7 +129,7 @@ posts_data = [
     description: "Complete authentication flow with login, registration, password reset, and session management.",
     summary: "Build a full authentication system from scratch.",
     category: auth_cat,
-    tags: %w[authentication session password],
+    tags: %w[authentication session password]
   },
   {
     title: "Image Upload with Preview",
@@ -137,7 +137,7 @@ posts_data = [
     description: "Drag-and-drop image upload with live preview, progress bar, and Active Storage integration.",
     summary: "Accept image uploads with drag-and-drop and real-time preview.",
     category: crud_cat,
-    tags: %w[upload image storage],
+    tags: %w[upload image storage]
   },
   {
     title: "Pagination & Infinite Scroll",
@@ -145,7 +145,7 @@ posts_data = [
     description: "Paginate large result sets with classic page numbers and seamless infinite scroll using Hotwire.",
     summary: "Add pagination and infinite scrolling to any list view.",
     category: ui_cat,
-    tags: %w[pagination infinite-scroll stimulus],
+    tags: %w[pagination infinite-scroll stimulus]
   },
   {
     title: "API Token Authentication",
@@ -153,7 +153,7 @@ posts_data = [
     description: "Secure your API with token-based authentication, rate limiting, and request validation.",
     summary: "Protect your Rails API with token-based auth.",
     category: api_cat,
-    tags: %w[api rest authentication],
+    tags: %w[api rest authentication]
   },
   {
     title: "Inline Editing",
@@ -161,7 +161,7 @@ posts_data = [
     description: "Click-to-edit any field on the page with automatic save using Turbo Frames and optimistic UI updates.",
     summary: "Make any field editable inline with automatic saving.",
     category: crud_cat,
-    tags: %w[form stimulus turbo],
+    tags: %w[form stimulus turbo]
   },
   {
     title: "Notification Toast System",
@@ -169,8 +169,8 @@ posts_data = [
     description: "Display real-time toast notifications with auto-dismiss, stacking, and action callbacks.",
     summary: "Build a toast notification system for user feedback.",
     category: ui_cat,
-    tags: %w[notification toast stimulus],
-  },
+    tags: %w[notification toast stimulus]
+  }
 ]
 
 posts_data.each do |data|
