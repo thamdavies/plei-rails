@@ -1,4 +1,4 @@
-class Views::Pages::Examples < Views::Base
+class Views::Examples::Index < Views::Base
   def initialize(posts:, categories:, tags:, selected_category:, selected_tag:)
     @posts = posts
     @categories = categories

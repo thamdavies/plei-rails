@@ -17,8 +17,8 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Public pages
-  get "examples" => "pages#examples", as: :examples
-  get "examples/:id" => "pages#show", as: :example
+  get "examples" => "examples#index", as: :examples
+  get "examples/:id" => "examples#show", as: :example
 
   root "pages#home"
 end
