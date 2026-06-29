@@ -23,7 +23,7 @@ gem "jbuilder"
 gem "bcrypt", "~> 3.1.7"
 
 # Authentication
-gem "clearance", "~> 2.7"
+gem "clearance", "~> 2.12"
 
 # Authorization
 gem "pundit", "~> 2.4"
