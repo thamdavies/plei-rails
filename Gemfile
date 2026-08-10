@@ -73,7 +73,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "ruby_ui", "~> 1.4", group: :development, require: false
+gem "ruby_ui", "~> 1.6", group: :development, require: false
 
 gem "phlex-rails", "~> 2.4"
 
