@@ -1,0 +1,21 @@
+en:
+  dry_validation:
+    errors:
+      taken: already exists
+      filled?: must be filled
+      invalid_format: invalid format
+      invalid_phone_number: not a valid phone number
+      password_mismatch: password does not match
+      min_size?: "minimum %{num} characters"
+      max_size?: "maximum %{num} characters"
+      gt?: "greater than %{num}"
+      gteq?: "greater than or equal to %{num}"
+      lt?: "less than %{num}"
+      lteq?: "less than or equal to %{num}"
+      decimal?: "must be a decimal number"
+      int?: "must be an integer"
+      str?: "must be a string"
+      array?: "must be an array"
+      float?: "must be a float"
+      bool?: "must be a boolean"
+      included_in?: "must be included in the list"

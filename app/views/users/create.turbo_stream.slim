@@ -1,0 +1,10 @@
+- if @form.present?
+  = turbo_stream.update "user_form" do
+    = render Views::Users::Form.new(form: @form)
+
+- elsif @users.present?
+  = turbo_stream_action_tag "toast", variant: "success", message: flash[:success].to_s
+  = turbo_stream_action_tag "close_dialog"
+
+  = turbo_stream.replace "users_list" do
+    = render Views::Users::Index.new(pagy: @pagy, users: @users)

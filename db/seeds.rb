@@ -68,6 +68,8 @@ end
 # --- Admin user ---
 admin_user = User.find_or_create_by!(email: ENV.fetch("ADMIN_EMAIL", "admin@plei.dev")) do |u|
   u.username = "admin"
+  u.first_name = "Admin"
+  u.last_name = "User"
   u.password = ENV.fetch("ADMIN_PASSWORD", Rails.env.production? ? nil : "password123")
 end
 UserRole.find_or_create_by!(user: admin_user, role: admin_role)

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include Clearance::Controller
+  include Pagy::Method
   include Pundit::Authorization
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized

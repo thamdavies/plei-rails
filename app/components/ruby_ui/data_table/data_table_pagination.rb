@@ -7,11 +7,12 @@ require_relative "data_table_kaminari_adapter"
 
 module RubyUI
   class DataTablePagination < Base
-    def initialize(with: nil, pagy: nil, kaminari: nil, page: nil, per_page: nil, total_count: nil, page_param: "page", path: "", query: {}, window: 1, prev_label: "<", next_label: ">", **attrs)
+    def initialize(with: nil, pagy: nil, kaminari: nil, page: nil, per_page: nil, total_count: nil, page_param: "page", path: "", query: {}, frame_id: nil, window: 1, prev_label: "<", next_label: ">", **attrs)
       @adapter = resolve_adapter(with:, pagy:, kaminari:, page:, per_page:, total_count:)
       @page_param = page_param
       @path = path
       @query = query.to_h.transform_keys(&:to_s)
+      @frame_id = frame_id
       @window = window
       @prev_label = prev_label
       @next_label = next_label
@@ -63,7 +64,7 @@ module RubyUI
           span(class: "opacity-50 pointer-events-none px-3 h-9 inline-flex items-center text-sm") { @prev_label }
         end
       else
-        render RubyUI::PaginationItem.new(href: page_href(current - 1)) { @prev_label }
+        render RubyUI::PaginationItem.new(href: page_href(current - 1), **link_attrs) { @prev_label }
       end
     end
 
@@ -73,7 +74,7 @@ module RubyUI
           span(class: "opacity-50 pointer-events-none px-3 h-9 inline-flex items-center text-sm") { @next_label }
         end
       else
-        render RubyUI::PaginationItem.new(href: page_href(current + 1)) { @next_label }
+        render RubyUI::PaginationItem.new(href: page_href(current + 1), **link_attrs) { @next_label }
       end
     end
 
@@ -82,9 +83,15 @@ module RubyUI
         if p == :gap
           render RubyUI::PaginationEllipsis.new
         else
-          render RubyUI::PaginationItem.new(href: page_href(p), active: p == current) { plain p.to_s }
+          render RubyUI::PaginationItem.new(href: page_href(p), active: p == current, **link_attrs) { plain p.to_s }
         end
       end
+    end
+
+    def link_attrs
+      return {} unless @frame_id
+
+      {data: {turbo_frame: @frame_id}}
     end
 
     def windowed_pages

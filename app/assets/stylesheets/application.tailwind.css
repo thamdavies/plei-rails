@@ -1,8 +1,5 @@
 @import "tailwindcss";
-
-
 @import "tw-animate-css";
-
 
 @custom-variant dark (&:is(.dark *));
 
@@ -152,3 +149,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Remove number input spinners */
+input[type="number"] {
+  appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+/* End Remove number input spinners */

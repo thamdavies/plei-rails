@@ -4,8 +4,8 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
+import RemoteDialogController from "./remote_dialog_controller"
+application.register("remote-dialog", RemoteDialogController)
 
 import RubyUi__AccordionController from "./ruby_ui/accordion_controller"
 application.register("ruby-ui--accordion", RubyUi__AccordionController)

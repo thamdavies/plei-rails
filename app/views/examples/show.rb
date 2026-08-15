@@ -1,9 +1,14 @@
 class Views::Examples::Show < Views::Base
-  def initialize(post:)
+  def initialize(post:, user_form:, pagy:, users:)
     @post = post
+    @user_form = user_form
+    @pagy = pagy
+    @users = users
   end
 
   def view_template
+    render Views::Users::Modal.new(form: @user_form)
+
     div(class: "container py-8") do
       Link(href: examples_path, variant: :link, class: "mb-6") do
         plain "← Back to examples"
@@ -27,6 +32,14 @@ class Views::Examples::Show < Views::Base
               Text(class: "leading-7") { @post.summary }
             end
           end
+
+          div(data: { controller: "remote-dialog", remote_dialog_path_value: new_user_path, remote_dialog_target_value: "user-dialog-trigger" }) do
+            Button(class: "cursor-pointer", data: { action: "click->remote-dialog#show" }) do
+              plain "Create User"
+            end
+          end
+
+          render Views::Users::Index.new(pagy: @pagy, users: @users)
 
           if @post.body.present?
             section(class: "space-y-2") do

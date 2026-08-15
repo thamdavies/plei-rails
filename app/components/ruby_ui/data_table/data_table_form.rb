@@ -2,6 +2,8 @@
 
 module RubyUI
   class DataTableForm < Base
+    include Phlex::Rails::Helpers::FormAuthenticityToken
+
     def initialize(action: "", method: "post", id: nil, **attrs)
       @action = action
       @method = method
@@ -21,15 +23,7 @@ module RubyUI
     private
 
     def csrf_token
-      # In a Rails app, view_context provides a real CSRF token.
-      # Outside Rails (gem tests), fall back to a placeholder.
-      if respond_to?(:helpers, true) && helpers.respond_to?(:form_authenticity_token)
-        helpers.form_authenticity_token
-      elsif respond_to?(:view_context, true) && view_context.respond_to?(:form_authenticity_token)
-        view_context.form_authenticity_token
-      else
-        "csrf-token-placeholder"
-      end
+      form_authenticity_token
     end
 
     def default_attrs

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Views::Base < Components::Base
+  include Views::Formable
+
   # The `Views::Base` is an abstract class for all your views.
 
   # By default, it inherits from `Components::Base`, but you
@@ -9,4 +11,7 @@ class Views::Base < Components::Base
 
   # More caching options at https://www.phlex.fun/components/caching
   def cache_store = Rails.cache
+
+  register_output_helper :pagy_nav
+  register_value_helper :params
 end

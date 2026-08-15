@@ -48,6 +48,9 @@ gem "thruster", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+# Slim templates generator for Rails
+gem "slim"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -73,10 +76,27 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "ruby_ui", "~> 1.4", group: :development, require: false
-
+# Ruby UI framework for Rails
+gem "ruby_ui", "~> 1.6", group: :development, require: false
 gem "phlex-rails", "~> 2.4"
-
 gem "tailwind_merge", "~> 1.5"
 
 gem "rouge", "~> 5.0"
+
+# Trailblazer for Rails
+gem "trailblazer", ">= 2.1.0"
+gem "trailblazer-rails"
+gem "reform", ">= 2.3.3"
+gem "reform-rails"
+gem "dry-validation"
+gem "phlex-icons", "~> 2.56"
+
+gem "pry", "~> 0.16.0"
+
+gem "pagy", "~> 43.5"
+
+gem "ransack", "~> 4.4"
+
+gem "draper", "~> 4.0"
+
+gem "config", "~> 5.6"
