@@ -1,0 +1,20 @@
+name: plei-rails
+
+services:
+  db:
+    image: postgres:18.0-bookworm
+    container_name: plei-rails-db
+    ports:
+      - "5439:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pg_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1", "-U", "postgres", "-d", "postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  pg_data:

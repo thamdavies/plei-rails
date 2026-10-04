@@ -1,0 +1,78 @@
+# PostgreSQL. Versions 9.5 and up are supported.
+#
+# Install the pg driver:
+#   gem install pg
+# On macOS with Homebrew:
+#   gem install pg -- --with-pg-config=/opt/homebrew/bin/pg_config
+# On Windows:
+#   gem install pg
+#       Choose the win32 build.
+#       Install PostgreSQL and put its /bin directory on your path.
+#
+# Configure Using Gemfile
+# gem "pg"
+#
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV.fetch("DATABASE_USERNAME", "postgres") %>
+  host: <%= ENV.fetch("DATABASE_HOST", "localhost") %>
+  port: <%= ENV.fetch("DATABASE_PORT", 5439) %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "postgres") %>
+
+development:
+  primary: &primary_development
+    <<: *default
+    database: plei_rails_development
+    # Prevent libpq's GSS initialization from crashing forked Solid Queue workers on macOS.
+    gssencmode: <%= "disable" if RUBY_PLATFORM.match?(/darwin/) %>
+
+  cache:
+    <<: *primary_development
+    database: plei_rails_development_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_development
+    database: plei_rails_development_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_development
+    database: plei_rails_development_cable
+    migrations_paths: db/cable_migrate
+
+test:
+  primary: &primary_test
+    <<: *default
+    database: plei_rails_test
+  cache:
+    <<: *primary_test
+    database: plei_rails_test_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_test
+    database: plei_rails_test_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_test
+    database: plei_rails_test_cable
+    migrations_paths: db/cable_migrate
+
+production:
+  primary: &primary_production
+    <<: *default
+    database: plei_rails_production
+  cache:
+    <<: *primary_production
+    database: plei_rails_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: plei_rails_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: plei_rails_production_cable
+    migrations_paths: db/cable_migrate

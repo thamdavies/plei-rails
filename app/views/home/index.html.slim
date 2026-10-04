@@ -1,0 +1,20 @@
+- content_for :title, "#{@title} · Plei Music"
+section class="px-3 pb-6 md:px-6" aria-labelledby="tracks-heading"
+  .flex.items-center.justify-between.py-4
+    h1#tracks-heading class="text-xl font-semibold tracking-tight" = @title
+    span class="text-xs text-muted-foreground" = "#{@tracks.size} tracks"
+  - if @tracks.empty?
+    div class="px-4 py-16 text-center"
+      h2 class="text-lg font-semibold" No tracks found
+      p class="mt-2 mb-5 text-muted-foreground" Try another title, artist, or playlist.
+      = link_to "Clear search", root_path(playlist: @playlist, view: @view, artist: @artist), class: "underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-ring"
+  - else
+    ul class="m-0 list-none p-0"
+      - @tracks.each do |track|
+        li class="flex min-h-[58px] items-center gap-3 rounded-lg px-3 py-2 hover:bg-muted"
+          img class="size-10 shrink-0 rounded-lg object-cover" src=track[:artwork] alt="" width="40" height="40" loading="lazy"
+          .min-w-0
+            h2 class="text-sm font-medium" = track[:title]
+            p class="mt-0.5 text-xs text-muted-foreground" = "#{track[:artist]} · #{track[:playlist]}"
+          span class="ml-auto pl-3 text-xs text-muted-foreground tabular-nums" aria-label="Duration #{track[:duration]}" = track[:duration]
+  p class="px-3 pt-5 text-xs text-muted-foreground" Preview library · Sample tracks
