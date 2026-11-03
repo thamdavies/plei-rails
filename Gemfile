@@ -67,7 +67,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "annotaterb", "~> 4.25"
+gem "annotaterb", "~> 4.26"
 
 gem "mission_control-jobs", "~> 1.3"
 
